@@ -1,7 +1,9 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SqlTypes;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -12,9 +14,179 @@ namespace LatvanyossagokApplication
 {
     public partial class Form1 : Form
     {
+        List<varosok> varosok = new List<varosok>();
+
+        string Vvarosnev = "";
+        int Vlakossaga = 0;
+
+        MySqlConnection conn;
         public Form1()
         {
             InitializeComponent();
+            conn = new MySqlConnection("Server=localhost; Database=latvanyossagokdb; Uid=root; Pwd=;");
+            conn.Open();
+
+            this.FormClosed += (sender, args) => {
+                if (conn != null)
+                {
+                    conn.Close();
+                }
+            };
+
+            AdatBetoltes("ossz");
+        }
+
+
+        public void VarosFEllenorzese()
+        {
+            if (Vvarosnev.Length>=4 && Vlakossaga>=1)
+            {
+                Varos_Felvetel_gomb.Enabled=true;
+            }
+            else
+            {
+                Varos_Felvetel_gomb.Enabled = false;
+            }
+        }
+
+        public void VarosEllAzAdatbazisban()
+        {
+            int VDB = 0;
+
+            string sql = @"
+SELECT COUNT(id) as Db
+FROM varosok
+WHERE nev LIKE @nev
+
+";
+            
+            var comm = this.conn.CreateCommand();
+            comm.Parameters.AddWithValue("@nev", Vvarosnev);
+            comm.CommandText = sql;
+            using (var reader = comm.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    int darab = reader.GetInt32("Db");
+
+
+
+
+
+                    VDB = darab;
+                   // MessageBox.Show(VDB.ToString());
+                }
+            }
+
+            if (VDB>0)
+            {
+                MessageBox.Show("A város név már foglalt az adatbázisban: "+Vvarosnev.ToString());
+            }
+            else
+            {
+                VarosFelvetele();
+            }
+        }
+
+      void  VarosFelvetele()
+        {
+            string sql = @"
+INSERT INTO `varosok`(`nev`, `lakossag`)
+VALUES (@nev, @lakossag)
+";
+            var comm = this.conn.CreateCommand();
+            comm.CommandText = sql;
+            comm.Parameters.AddWithValue("@nev", Vvarosnev);
+            comm.Parameters.AddWithValue("@lakossag", Vlakossaga);
+            comm.ExecuteNonQuery();
+
+            AdatBetoltes("egy");
+        }
+
+
+       
+        public  void AdatBetoltes(string db)
+        {
+            string sql;
+
+            if (db=="ossz")
+            {
+                 sql = @"
+SELECT id,nev,lakossag
+FROM varosok
+";
+            }
+            else 
+            {
+                 sql = @"
+SELECT id,nev,lakossag
+FROM varosok
+WHERE nev LIKE @nev
+";
+            }
+
+            var comm = this.conn.CreateCommand();
+
+            if(db=="egy")
+            comm.Parameters.AddWithValue("@nev", Vvarosnev);
+
+            comm.CommandText = sql;
+            using (var reader = comm.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+
+                    int id = reader.GetInt32("id");
+                    string nev = reader.GetString("nev");
+                    int lakossag = reader.GetInt32("lakossag");
+
+
+                    var varos = new varosok(id, nev, lakossag);
+                    varosok_lista_box.Items.Add(varos);
+                    varosok.Add(varos);
+                    
+
+                }
+            }
+
+            ///////////////////
+        }
+
+        private void varosok_lista_box_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (varosok_lista_box.SelectedIndex!=-1)
+            {
+                int index = varosok_lista_box.SelectedIndex;
+                MessageBox.Show((varosok[index].Nev + " " + varosok[index].Lakossag).ToString());
+            }
+            
+        }
+
+      
+
+        private void varos_neve_TextChanged(object sender, EventArgs e)
+        {
+            Vvarosnev = varos_neve.Text;
+            VarosFEllenorzese();
+             
+        }
+
+        
+
+        private void Varos_Felvetel_gomb_Click(object sender, EventArgs e)
+        {
+
+            VarosEllAzAdatbazisban();
+
+
+        }
+
+        private void varos_lakosaga_bemenet_ValueChanged_1(object sender, EventArgs e)
+        {
+            Vlakossaga = Convert.ToInt32(varos_lakosaga_bemenet.Value);
+            VarosFEllenorzese();
         }
     }
-}
+        }
+    
+
