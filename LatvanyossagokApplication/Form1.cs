@@ -169,6 +169,7 @@ WHERE nev LIKE @nev
             if (varosok_lista_box.SelectedIndex!=-1)
             {
                 Modositas();
+                varos_torlese_gomb.Visible = true;
                 
                 int index = varosok_lista_box.SelectedIndex;
                 MessageBox.Show((varosok[index].Nev + " " + varosok[index].Lakossag).ToString());
@@ -176,6 +177,7 @@ WHERE nev LIKE @nev
             else
             {
                 varos_adat_modosit_gomb.Visible = false;
+                varos_torlese_gomb.Visible = false;
             }
             
         }
@@ -306,6 +308,29 @@ WHERE id = @id
 
 
 
+
+
+        }
+
+        private void varos_torlese_gomb_Click(object sender, EventArgs e)
+        {
+            int index = varosok_lista_box.SelectedIndex;
+            int vid = varosok[index].Id;
+
+            string sql = @"
+DELETE FROM varosok
+WHERE id=@id
+";
+
+            var comm = this.conn.CreateCommand();
+            comm.CommandText = sql;
+
+            comm.Parameters.AddWithValue("@id", vid);
+            comm.ExecuteNonQuery();
+
+
+            varosok.Remove(varosok[index]);
+            varosok_lista_box.Items.Remove(varosok_lista_box.Items[index]);
 
 
         }
