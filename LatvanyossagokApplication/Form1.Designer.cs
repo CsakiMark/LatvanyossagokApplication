@@ -95,15 +95,18 @@
             this.latvanyossag_leirasa.Name = "latvanyossag_leirasa";
             this.latvanyossag_leirasa.Size = new System.Drawing.Size(100, 22);
             this.latvanyossag_leirasa.TabIndex = 3;
+            this.latvanyossag_leirasa.TextChanged += new System.EventHandler(this.latvanyossag_leirasa_TextChanged);
             // 
             // latvanyossagok_felvetele_gomb
             // 
+            this.latvanyossagok_felvetele_gomb.Enabled = false;
             this.latvanyossagok_felvetele_gomb.Location = new System.Drawing.Point(6, 152);
             this.latvanyossagok_felvetele_gomb.Name = "latvanyossagok_felvetele_gomb";
             this.latvanyossagok_felvetele_gomb.Size = new System.Drawing.Size(188, 23);
             this.latvanyossagok_felvetele_gomb.TabIndex = 2;
             this.latvanyossagok_felvetele_gomb.Text = "Felvétel";
             this.latvanyossagok_felvetele_gomb.UseVisualStyleBackColor = true;
+            this.latvanyossagok_felvetele_gomb.Click += new System.EventHandler(this.latvanyossagok_felvetele_gomb_Click);
             // 
             // latvanyossag_nev
             // 
@@ -111,21 +114,28 @@
             this.latvanyossag_nev.Name = "latvanyossag_nev";
             this.latvanyossag_nev.Size = new System.Drawing.Size(100, 22);
             this.latvanyossag_nev.TabIndex = 0;
+            this.latvanyossag_nev.TextChanged += new System.EventHandler(this.latvanyossag_nev_TextChanged);
             // 
             // latvanyossag_ara
             // 
             this.latvanyossag_ara.Location = new System.Drawing.Point(22, 112);
+            this.latvanyossag_ara.Maximum = new decimal(new int[] {
+            10000000,
+            0,
+            0,
+            0});
             this.latvanyossag_ara.Name = "latvanyossag_ara";
             this.latvanyossag_ara.Size = new System.Drawing.Size(148, 22);
             this.latvanyossag_ara.TabIndex = 1;
+            this.latvanyossag_ara.ValueChanged += new System.EventHandler(this.latvanyossag_ara_ValueChanged);
             // 
             // varosok_lista_box
             // 
             this.varosok_lista_box.FormattingEnabled = true;
             this.varosok_lista_box.ItemHeight = 16;
-            this.varosok_lista_box.Location = new System.Drawing.Point(46, 275);
+            this.varosok_lista_box.Location = new System.Drawing.Point(12, 274);
             this.varosok_lista_box.Name = "varosok_lista_box";
-            this.varosok_lista_box.Size = new System.Drawing.Size(165, 116);
+            this.varosok_lista_box.Size = new System.Drawing.Size(277, 164);
             this.varosok_lista_box.TabIndex = 4;
             this.varosok_lista_box.SelectedIndexChanged += new System.EventHandler(this.varosok_lista_box_SelectedIndexChanged);
             // 
@@ -133,9 +143,9 @@
             // 
             this.latvanyossagok_lista.FormattingEnabled = true;
             this.latvanyossagok_lista.ItemHeight = 16;
-            this.latvanyossagok_lista.Location = new System.Drawing.Point(317, 275);
+            this.latvanyossagok_lista.Location = new System.Drawing.Point(409, 274);
             this.latvanyossagok_lista.Name = "latvanyossagok_lista";
-            this.latvanyossagok_lista.Size = new System.Drawing.Size(165, 116);
+            this.latvanyossagok_lista.Size = new System.Drawing.Size(277, 164);
             this.latvanyossagok_lista.TabIndex = 5;
             // 
             // varos_lakosaga_bemenet

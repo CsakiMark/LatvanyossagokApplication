@@ -19,6 +19,10 @@ namespace LatvanyossagokApplication
         string Vvarosnev = "";
         int Vlakossaga = 0;
 
+        string Lnev="";
+        string Lleiras="";
+        int Lar=0;
+
         MySqlConnection conn;
         public Form1()
         {
@@ -37,7 +41,7 @@ namespace LatvanyossagokApplication
         }
 
 
-        public void VarosFEllenorzese()
+        void VarosFEllenorzese()
         {
             if (Vvarosnev.Length>=4 && Vlakossaga>=1)
             {
@@ -49,7 +53,8 @@ namespace LatvanyossagokApplication
             }
         }
 
-        public void VarosEllAzAdatbazisban()
+
+        void VarosEllAzAdatbazisban()
         {
             int VDB = 0;
 
@@ -88,7 +93,7 @@ WHERE nev LIKE @nev
             }
         }
 
-      void  VarosFelvetele()
+        void  VarosFelvetele()
         {
             string sql = @"
 INSERT INTO `varosok`(`nev`, `lakossag`)
@@ -102,7 +107,6 @@ VALUES (@nev, @lakossag)
 
             AdatBetoltes("egy");
         }
-
 
        
         public  void AdatBetoltes(string db)
@@ -150,12 +154,19 @@ WHERE nev LIKE @nev
             }
 
             ///////////////////
+            ///
+            Vvarosnev = "";
+            Vlakossaga = 0;
+            varos_neve.Text = "";
+            varos_lakosaga_bemenet.Value = 0;
         }
 
         private void varosok_lista_box_SelectedIndexChanged(object sender, EventArgs e)
         {
+            latvanyFgombELL();
             if (varosok_lista_box.SelectedIndex!=-1)
             {
+                
                 int index = varosok_lista_box.SelectedIndex;
                 MessageBox.Show((varosok[index].Nev + " " + varosok[index].Lakossag).ToString());
             }
@@ -185,6 +196,62 @@ WHERE nev LIKE @nev
         {
             Vlakossaga = Convert.ToInt32(varos_lakosaga_bemenet.Value);
             VarosFEllenorzese();
+        }
+
+        private void latvanyossag_nev_TextChanged(object sender, EventArgs e)
+        {
+            Lnev = latvanyossag_nev.Text;
+            latvanyFgombELL();
+        }
+
+        private void latvanyossag_leirasa_TextChanged(object sender, EventArgs e)
+        {
+            Lleiras = latvanyossag_leirasa.Text;
+            latvanyFgombELL();
+
+
+        }
+
+        void latvanyFgombELL()
+        {
+            if (Lnev.Length >= 4 && Lleiras.Length>=4 && varosok_lista_box.SelectedIndex!=-1)
+            {
+                latvanyossagok_felvetele_gomb.Enabled = true;
+            }
+            else
+            {
+                latvanyossagok_felvetele_gomb.Enabled = false;
+            }
+        }
+
+        private void latvanyossag_ara_ValueChanged(object sender, EventArgs e)
+        {
+          Lar=Convert.ToInt32(latvanyossag_ara.Value);
+        }
+
+        private void latvanyossagok_felvetele_gomb_Click(object sender, EventArgs e)
+        {
+            LatvanyFelvetele();
+        }
+
+        void LatvanyFelvetele()
+        {
+            int index = varosok_lista_box.SelectedIndex;
+            int vid = varosok[index].Id;
+
+            string sql = @"
+INSERT INTO `latvanyossagok`(`nev`, `leiras`,`ar`,`varos_id`)
+VALUES (@nev, @leiras,@ar,@id)
+";
+            var comm = this.conn.CreateCommand();
+            comm.CommandText = sql;
+            comm.Parameters.AddWithValue("@nev", Lnev);
+            comm.Parameters.AddWithValue("@leiras", Lleiras);
+            comm.Parameters.AddWithValue("@ar", Lar);
+            comm.Parameters.AddWithValue("@id",vid);
+            comm.ExecuteNonQuery();
+
+            
         }
     }
         }

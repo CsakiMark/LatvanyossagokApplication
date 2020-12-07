@@ -25,7 +25,7 @@ namespace LatvanyossagokApplication
 
         public override string ToString()
         {
-            return nev;
+            return string.Format("Nev: {0}-Lakossag:{1} fő", nev, lakossag);
         }
     }
 }
