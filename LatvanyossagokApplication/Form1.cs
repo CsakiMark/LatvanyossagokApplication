@@ -46,10 +46,12 @@ namespace LatvanyossagokApplication
             if (Vvarosnev.Length>=4 && Vlakossaga>=1)
             {
                 Varos_Felvetel_gomb.Enabled=true;
+                varos_adat_modosit_gomb.Enabled = true;
             }
             else
             {
                 Varos_Felvetel_gomb.Enabled = false;
+                varos_adat_modosit_gomb.Enabled = false;
             }
         }
 
@@ -166,11 +168,30 @@ WHERE nev LIKE @nev
             latvanyFgombELL();
             if (varosok_lista_box.SelectedIndex!=-1)
             {
+                Modositas();
                 
                 int index = varosok_lista_box.SelectedIndex;
                 MessageBox.Show((varosok[index].Nev + " " + varosok[index].Lakossag).ToString());
             }
+            else
+            {
+                varos_adat_modosit_gomb.Visible = false;
+            }
             
+        }
+
+        void Modositas()
+        {
+            int index = varosok_lista_box.SelectedIndex;
+            varos_adat_modosit_gomb.Visible = true;
+
+            Vvarosnev = varosok[index].Nev;
+            Vlakossaga = varosok[index].Lakossag;
+
+            int id= varosok[index].Id;
+
+            varos_neve.Text = varosok[index].Nev;
+            varos_lakosaga_bemenet.Value = varosok[index].Lakossag;
         }
 
       
@@ -252,6 +273,41 @@ VALUES (@nev, @leiras,@ar,@id)
             comm.ExecuteNonQuery();
 
             
+        }
+
+        private void varos_adat_modosit_gomb_Click(object sender, EventArgs e)
+        {
+
+            int index = varosok_lista_box.SelectedIndex;
+            int vid = varosok[index].Id;
+
+            string sql = @"
+UPDATE varosok
+SET nev = @nev, lakossag = @lakos
+WHERE id = @id
+";
+
+
+            var comm = this.conn.CreateCommand();
+            comm.CommandText = sql;
+            comm.Parameters.AddWithValue("@nev", Vvarosnev);
+            comm.Parameters.AddWithValue("@lakos", Vlakossaga);
+            comm.Parameters.AddWithValue("@ar", Lar);
+            comm.Parameters.AddWithValue("@id", vid);
+            comm.ExecuteNonQuery();
+
+            varosok[index].Nev = Vvarosnev;
+            varosok[index].Lakossag = Vlakossaga;
+
+            varosok v = new varosok(vid,Vvarosnev, Vlakossaga);
+
+            varosok_lista_box.Items[index] = v;
+
+
+
+
+
+
         }
     }
         }

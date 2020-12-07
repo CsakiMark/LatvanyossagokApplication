@@ -39,6 +39,7 @@
             this.varosok_lista_box = new System.Windows.Forms.ListBox();
             this.latvanyossagok_lista = new System.Windows.Forms.ListBox();
             this.varos_lakosaga_bemenet = new System.Windows.Forms.NumericUpDown();
+            this.varos_adat_modosit_gomb = new System.Windows.Forms.Button();
             this.Városok.SuspendLayout();
             this.Látványosságok.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.latvanyossag_ara)).BeginInit();
@@ -55,12 +56,13 @@
             // 
             // Városok
             // 
+            this.Városok.Controls.Add(this.varos_adat_modosit_gomb);
             this.Városok.Controls.Add(this.varos_lakosaga_bemenet);
             this.Városok.Controls.Add(this.Varos_Felvetel_gomb);
             this.Városok.Controls.Add(this.varos_neve);
             this.Városok.Location = new System.Drawing.Point(46, 37);
             this.Városok.Name = "Városok";
-            this.Városok.Size = new System.Drawing.Size(200, 134);
+            this.Városok.Size = new System.Drawing.Size(200, 181);
             this.Városok.TabIndex = 2;
             this.Városok.TabStop = false;
             this.Városok.Text = "Városok";
@@ -161,6 +163,17 @@
             this.varos_lakosaga_bemenet.TabIndex = 6;
             this.varos_lakosaga_bemenet.ValueChanged += new System.EventHandler(this.varos_lakosaga_bemenet_ValueChanged_1);
             // 
+            // varos_adat_modosit_gomb
+            // 
+            this.varos_adat_modosit_gomb.Location = new System.Drawing.Point(7, 152);
+            this.varos_adat_modosit_gomb.Name = "varos_adat_modosit_gomb";
+            this.varos_adat_modosit_gomb.Size = new System.Drawing.Size(187, 23);
+            this.varos_adat_modosit_gomb.TabIndex = 7;
+            this.varos_adat_modosit_gomb.Text = "Modositás";
+            this.varos_adat_modosit_gomb.UseVisualStyleBackColor = true;
+            this.varos_adat_modosit_gomb.Visible = false;
+            this.varos_adat_modosit_gomb.Click += new System.EventHandler(this.varos_adat_modosit_gomb_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -195,6 +208,7 @@
         private System.Windows.Forms.ListBox varosok_lista_box;
         private System.Windows.Forms.ListBox latvanyossagok_lista;
         private System.Windows.Forms.NumericUpDown varos_lakosaga_bemenet;
+        private System.Windows.Forms.Button varos_adat_modosit_gomb;
     }
 }
 
