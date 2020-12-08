@@ -35,13 +35,14 @@
             this.varos_lakosaga_bemenet = new System.Windows.Forms.NumericUpDown();
             this.Varos_Felvetel_gomb = new System.Windows.Forms.Button();
             this.Látványosságok = new System.Windows.Forms.GroupBox();
-            this.button2 = new System.Windows.Forms.Button();
+            this.latvanyossagok_modositasa_gomb = new System.Windows.Forms.Button();
             this.latvanyossag_leirasa = new System.Windows.Forms.TextBox();
             this.latvanyossagok_felvetele_gomb = new System.Windows.Forms.Button();
             this.latvanyossag_nev = new System.Windows.Forms.TextBox();
             this.latvanyossag_ara = new System.Windows.Forms.NumericUpDown();
             this.varosok_lista_box = new System.Windows.Forms.ListBox();
             this.latvanyossagok_lista = new System.Windows.Forms.ListBox();
+            this.Latvanyossag_torlese_gomb = new System.Windows.Forms.Button();
             this.Városok.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.varos_lakosaga_bemenet)).BeginInit();
             this.Látványosságok.SuspendLayout();
@@ -118,26 +119,30 @@
             // 
             // Látványosságok
             // 
-            this.Látványosságok.Controls.Add(this.button2);
+            this.Látványosságok.Controls.Add(this.Latvanyossag_torlese_gomb);
+            this.Látványosságok.Controls.Add(this.latvanyossagok_modositasa_gomb);
             this.Látványosságok.Controls.Add(this.latvanyossag_leirasa);
             this.Látványosságok.Controls.Add(this.latvanyossagok_felvetele_gomb);
             this.Látványosságok.Controls.Add(this.latvanyossag_nev);
             this.Látványosságok.Controls.Add(this.latvanyossag_ara);
             this.Látványosságok.Location = new System.Drawing.Point(295, 37);
             this.Látványosságok.Name = "Látványosságok";
-            this.Látványosságok.Size = new System.Drawing.Size(200, 231);
+            this.Látványosságok.Size = new System.Drawing.Size(290, 231);
             this.Látványosságok.TabIndex = 3;
             this.Látványosságok.TabStop = false;
             this.Látványosságok.Text = "Látványosságok";
             // 
-            // button2
+            // latvanyossagok_modositasa_gomb
             // 
-            this.button2.Location = new System.Drawing.Point(62, 208);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 9;
-            this.button2.Text = "button2";
-            this.button2.UseVisualStyleBackColor = true;
+            this.latvanyossagok_modositasa_gomb.Enabled = false;
+            this.latvanyossagok_modositasa_gomb.Location = new System.Drawing.Point(55, 191);
+            this.latvanyossagok_modositasa_gomb.Name = "latvanyossagok_modositasa_gomb";
+            this.latvanyossagok_modositasa_gomb.Size = new System.Drawing.Size(82, 23);
+            this.latvanyossagok_modositasa_gomb.TabIndex = 9;
+            this.latvanyossagok_modositasa_gomb.Text = "Modositás";
+            this.latvanyossagok_modositasa_gomb.UseVisualStyleBackColor = true;
+            this.latvanyossagok_modositasa_gomb.Visible = false;
+            this.latvanyossagok_modositasa_gomb.Click += new System.EventHandler(this.latvanyossagok_modositasa_gomb_Click);
             // 
             // latvanyossag_leirasa
             // 
@@ -193,11 +198,22 @@
             // 
             this.latvanyossagok_lista.FormattingEnabled = true;
             this.latvanyossagok_lista.ItemHeight = 16;
-            this.latvanyossagok_lista.Location = new System.Drawing.Point(409, 274);
+            this.latvanyossagok_lista.Location = new System.Drawing.Point(398, 274);
             this.latvanyossagok_lista.Name = "latvanyossagok_lista";
             this.latvanyossagok_lista.Size = new System.Drawing.Size(277, 164);
             this.latvanyossagok_lista.TabIndex = 5;
             this.latvanyossagok_lista.SelectedIndexChanged += new System.EventHandler(this.latvanyossagok_lista_SelectedIndexChanged);
+            // 
+            // Latvanyossag_torlese_gomb
+            // 
+            this.Latvanyossag_torlese_gomb.Location = new System.Drawing.Point(173, 191);
+            this.Latvanyossag_torlese_gomb.Name = "Latvanyossag_torlese_gomb";
+            this.Latvanyossag_torlese_gomb.Size = new System.Drawing.Size(75, 23);
+            this.Latvanyossag_torlese_gomb.TabIndex = 10;
+            this.Latvanyossag_torlese_gomb.Text = "Törlés";
+            this.Latvanyossag_torlese_gomb.UseVisualStyleBackColor = true;
+            this.Latvanyossag_torlese_gomb.Visible = false;
+            this.Latvanyossag_torlese_gomb.Click += new System.EventHandler(this.Latvanyossag_torlese_gomb_Click);
             // 
             // Form1
             // 
@@ -235,7 +251,8 @@
         private System.Windows.Forms.NumericUpDown varos_lakosaga_bemenet;
         private System.Windows.Forms.Button varos_adat_modosit_gomb;
         private System.Windows.Forms.Button varos_torlese_gomb;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button latvanyossagok_modositasa_gomb;
+        private System.Windows.Forms.Button Latvanyossag_torlese_gomb;
     }
 }
 

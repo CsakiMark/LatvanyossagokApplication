@@ -24,12 +24,29 @@ namespace LatvanyossagokApplication
         string Lleiras="";
         int Lar=0;
 
+       
+
         MySqlConnection conn;
+
+
+
+
         public Form1()
         {
             InitializeComponent();
             conn = new MySqlConnection("Server=localhost; Database=latvanyossagokdb; Uid=root; Pwd=;");
-            conn.Open();
+            try
+            {
+               
+                conn.Open();
+            }
+            catch (MySqlException)
+            {
+                MessageBox.Show("Sikertelen kapcsolódás az adatbázishoz!");
+                Environment.Exit(0);
+            }
+
+            TablakElenorzese();
 
             this.FormClosed += (sender, args) => {
                 if (conn != null)
@@ -39,6 +56,43 @@ namespace LatvanyossagokApplication
             };
 
             AdatBetoltes("ossz");
+        }
+
+
+
+        void TablakElenorzese()
+        {
+            var v = @"CREATE TABLE IF NOT EXISTS varosok (
+                          id int(11) AUTO_INCREMENT,
+                          nev text COLLATE utf8mb4_hungarian_ci NOT NULL,
+                          lakossag int(11) NOT NULL,
+                          PRIMARY KEY (id),
+                          UNIQUE KEY nev (nev) USING HASH
+                          )";
+
+            var l = @"CREATE TABLE IF NOT EXISTS latvanyossagok (
+                                   id int(11) NOT NULL AUTO_INCREMENT,
+                                   nev text COLLATE utf8mb4_hungarian_ci NOT NULL,
+                                   leiras text COLLATE utf8mb4_hungarian_ci NOT NULL,
+                                   ar int(11)  DEFAULT NULL,
+                                   varos_id int(11),
+                                   PRIMARY KEY (id),
+                                   FOREIGN KEY (varos_id) REFERENCES varosok(id) ON DELETE CASCADE ON UPDATE RESTRICT
+                                   )";
+            var vComm = this.conn.CreateCommand();
+            var lComm = this.conn.CreateCommand();
+            vComm.CommandText = v;
+            lComm.CommandText = l;
+            try
+            {
+                vComm.ExecuteNonQuery();
+                lComm.ExecuteNonQuery();
+            }
+            catch (MySqlException)
+            {
+                MessageBox.Show("Nem létrehozható adatbázis");
+                Environment.Exit(0);
+            }
         }
 
 
@@ -171,7 +225,14 @@ WHERE nev LIKE @nev
             {
                 Modositas();
                 varos_torlese_gomb.Visible = true;
-                
+
+                Lnev = "";
+                Lleiras = "";
+                Lar = 0;
+                latvanyossag_nev.Text = "";
+                latvanyossag_leirasa.Text = "";
+                latvanyossag_ara.Value = 0;
+
                 int index = varosok_lista_box.SelectedIndex;
                 // MessageBox.Show((varosok[index].Nev + " " + varosok[index].Lakossag).ToString());
                 LatvanyossagokListazasa();
@@ -227,12 +288,14 @@ WHERE nev LIKE @nev
         {
             Lnev = latvanyossag_nev.Text;
             latvanyFgombELL();
+            ladatEllenorzes();
         }
 
         private void latvanyossag_leirasa_TextChanged(object sender, EventArgs e)
         {
             Lleiras = latvanyossag_leirasa.Text;
             latvanyFgombELL();
+            ladatEllenorzes();
 
 
         }
@@ -348,6 +411,9 @@ WHERE id=@id
             varosok.Remove(varosok[index]);
             varosok_lista_box.Items.Remove(varosok_lista_box.Items[index]);
 
+            latvanyossagokLista.Clear();
+            latvanyossagok_lista.Items.Clear();
+
 
         }
 
@@ -426,6 +492,103 @@ WHERE varos_id=@id
 
         private void latvanyossagok_lista_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (latvanyossagok_lista.SelectedIndex!=-1)
+            {
+                latvanyVisszatoltese();
+                latvanyossagok_modositasa_gomb.Visible = true;
+                ladatEllenorzes();
+
+                Latvanyossag_torlese_gomb.Visible = true;
+
+
+            }
+            else
+            {
+                latvanyossagok_modositasa_gomb.Visible = false;
+                Latvanyossag_torlese_gomb.Visible = false;
+            }
+        }
+        void ladatEllenorzes()
+        {
+            if (Lnev.Length>=4 && Lleiras.Length>=4)
+            {
+                latvanyossagok_modositasa_gomb.Enabled = true;
+            }
+            else
+            {
+                latvanyossagok_modositasa_gomb.Enabled = false;
+            }
+        }
+
+       void latvanyVisszatoltese()
+        {
+            int index = latvanyossagok_lista.SelectedIndex;
+
+             Lnev = latvanyossagokLista[index].Nev;
+             Lleiras = latvanyossagokLista[index].Leiras;
+             Lar = latvanyossagokLista[index].Ar;
+
+            latvanyossag_nev.Text = Lnev;
+            latvanyossag_leirasa.Text = Lleiras;
+            latvanyossag_ara.Value = Lar;
+        }
+
+        private void latvanyossagok_modositasa_gomb_Click(object sender, EventArgs e)
+        {
+            int index = latvanyossagok_lista.SelectedIndex;
+            int vid = latvanyossagokLista[index].V_id;
+           
+            string sql = @"
+UPDATE latvanyossagok
+SET nev = @nev, leiras = @leirasa,ar=@ara
+WHERE varos_id = @id
+";
+
+
+            var comm = this.conn.CreateCommand();
+            comm.CommandText = sql;
+            comm.Parameters.AddWithValue("@nev", Lnev);
+            comm.Parameters.AddWithValue("@leirasa", Lleiras);
+            comm.Parameters.AddWithValue("@ara", Lar);
+            comm.Parameters.AddWithValue("@id", vid);
+            comm.ExecuteNonQuery();
+
+            //varosok[index].Nev = Vvarosnev;
+           // varosok[index].Lakossag = Vlakossaga;
+
+            var v = new latvanyossagok(vid,Lnev,Lleiras,Lar,vid);
+
+            latvanyossagokLista[index] = v;
+            latvanyossagok_lista.Items[index] = v;
+        }
+
+        private void Latvanyossag_torlese_gomb_Click(object sender, EventArgs e)
+        {
+            int index = latvanyossagok_lista.SelectedIndex;
+            int vid = latvanyossagokLista[index].Id;
+
+            string sql = @"
+DELETE FROM latvanyossagok
+WHERE id=@id
+";
+
+
+            var comm = this.conn.CreateCommand();
+            comm.CommandText = sql;
+
+            comm.Parameters.AddWithValue("@id", vid);
+            comm.ExecuteNonQuery();
+
+            latvanyossagokLista.Remove(latvanyossagokLista[index]);
+            latvanyossagok_lista.Items.Remove(latvanyossagok_lista.Items[index]);
+
+
+            Lnev = "";
+            Lleiras = "";
+            Lar = 0;
+            latvanyossag_nev.Text = "";
+            latvanyossag_leirasa.Text = "";
+            latvanyossag_ara.Value = 0;
 
         }
     }
