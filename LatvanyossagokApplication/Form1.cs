@@ -63,19 +63,19 @@ namespace LatvanyossagokApplication
         void TablakElenorzese()
         {
             var v = @"CREATE TABLE IF NOT EXISTS varosok (
-                          id int(11) AUTO_INCREMENT,
+                          id int(10) AUTO_INCREMENT,
                           nev text COLLATE utf8mb4_hungarian_ci NOT NULL,
-                          lakossag int(11) NOT NULL,
+                          lakossag int(10) NOT NULL,
                           PRIMARY KEY (id),
                           UNIQUE KEY nev (nev) USING HASH
                           )";
 
             var l = @"CREATE TABLE IF NOT EXISTS latvanyossagok (
-                                   id int(11) AUTO_INCREMENT,
+                                   id int(10) AUTO_INCREMENT,
                                    nev text COLLATE utf8mb4_hungarian_ci NOT NULL,
                                    leiras text COLLATE utf8mb4_hungarian_ci NOT NULL,
-                                   ar int(11)  DEFAULT NULL,
-                                   varos_id int(11),
+                                   ar int(10)  DEFAULT NULL,
+                                   varos_id int(10),
                                    PRIMARY KEY (id),
                                    FOREIGN KEY (varos_id) REFERENCES varosok(id) ON DELETE CASCADE ON UPDATE RESTRICT
                                    )";
