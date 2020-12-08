@@ -15,6 +15,7 @@ namespace LatvanyossagokApplication
     public partial class Form1 : Form
     {
         List<varosok> varosok = new List<varosok>();
+        List<latvanyossagok> latvanyossagokLista = new List<latvanyossagok>();
 
         string Vvarosnev = "";
         int Vlakossaga = 0;
@@ -172,7 +173,8 @@ WHERE nev LIKE @nev
                 varos_torlese_gomb.Visible = true;
                 
                 int index = varosok_lista_box.SelectedIndex;
-                MessageBox.Show((varosok[index].Nev + " " + varosok[index].Lakossag).ToString());
+                // MessageBox.Show((varosok[index].Nev + " " + varosok[index].Lakossag).ToString());
+                LatvanyossagokListazasa();
             }
             else
             {
@@ -274,7 +276,17 @@ VALUES (@nev, @leiras,@ar,@id)
             comm.Parameters.AddWithValue("@id",vid);
             comm.ExecuteNonQuery();
 
-            
+            LatvanyossagokListazasa();
+
+            Lnev = "";
+            Lleiras = "";
+            Lar = 0;
+            latvanyossag_nev.Text = "";
+            latvanyossag_leirasa.Text = "";
+            latvanyossag_ara.Value = 0;
+
+
+
         }
 
         private void varos_adat_modosit_gomb_Click(object sender, EventArgs e)
@@ -314,6 +326,8 @@ WHERE id = @id
 
         private void varos_torlese_gomb_Click(object sender, EventArgs e)
         {
+            latvanyT();
+
             int index = varosok_lista_box.SelectedIndex;
             int vid = varosok[index].Id;
 
@@ -321,6 +335,8 @@ WHERE id = @id
 DELETE FROM varosok
 WHERE id=@id
 ";
+
+            
 
             var comm = this.conn.CreateCommand();
             comm.CommandText = sql;
@@ -332,6 +348,84 @@ WHERE id=@id
             varosok.Remove(varosok[index]);
             varosok_lista_box.Items.Remove(varosok_lista_box.Items[index]);
 
+
+        }
+
+        void latvanyT()
+        {
+
+            int index = varosok_lista_box.SelectedIndex;
+            int vid = varosok[index].Id;
+
+            string sql = @"
+DELETE FROM latvanyossagok
+WHERE varos_id=@id
+";
+
+
+            var comm = this.conn.CreateCommand();
+            comm.CommandText = sql;
+
+            comm.Parameters.AddWithValue("@id", vid);
+            comm.ExecuteNonQuery();
+
+
+
+
+
+        }
+
+
+       void LatvanyossagokListazasa()
+        {
+            latvanyossagokLista.Clear();
+            latvanyossagok_lista.Items.Clear();
+
+            int index = varosok_lista_box.SelectedIndex;
+            int vid = varosok[index].Id;
+
+            string sql;
+
+           
+                sql = @"
+SELECT id,nev,leiras,ar,varos_id
+FROM latvanyossagok
+WHERE varos_id=@id
+";
+            
+         
+
+            var comm = this.conn.CreateCommand();
+            comm.Parameters.AddWithValue("@id", vid);
+
+
+
+            comm.CommandText = sql;
+            using (var reader = comm.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+
+                    int id = reader.GetInt32("id");
+                    string nev = reader.GetString("nev");
+                    string leirasa = reader.GetString("leiras");
+                    int ar = reader.GetInt32("ar");
+                    int v_id = reader.GetInt32("varos_id");
+
+                    var latvany = new latvanyossagok(id,nev, leirasa, ar,v_id);
+                    latvanyossagok_lista.Items.Add(latvany);
+                    latvanyossagokLista.Add(latvany);
+
+
+                }
+            }
+
+          
+            
+        }
+
+        private void latvanyossagok_lista_SelectedIndexChanged(object sender, EventArgs e)
+        {
 
         }
     }
